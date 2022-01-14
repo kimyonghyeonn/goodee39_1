@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="bbs">
+	<select id="selectBBSList" parameterType="bbsVO"
+		resultType="bbsVO">
+		select B.num, B.title, B.owneremail, B.ownername, B.createdate,
+		B.isdelete, B.content, B.productscore
+		from bbs B, member M
+		where B.isdelete = 'N' and M.isdelete = 'N' and B.owneremail = M.email
+		<!-- <if test="title != null"> and title like #{title}</if> <if test="content 
+			!=null">and content like #{content}</if> -->
+
+		<choose>
+			<when test="title != null and content != null">
+				and title like #{title} or content like #{content}
+			</when>
+			<when test="title != null and content == null">
+				and title like #{title}
+			</when>
+			<when test="title == null and content != null">
+				and content like #{content}
+			</when>
+		</choose>
+		limit #{start}, #{count}
+
+	</select>
+
+
+
+
+	<select id="selectBBSCount" parameterType="bbsVO"
+		resultType="int">
+		select count(*)
+		from bbs
+		where isdelete = 'N'
+		<choose>
+			<when test="title != null and content != null">
+				and title like #{title} or content like #{content}
+			</when>
+			<when test="title != null and content == null">
+				and title like #{title}
+			</when>
+			<when test="title == null and content != null">
+				and content like #{content}
+			</when>
+		</choose>
+		<if test="title != null">or title like #{title}</if>
+		<if test="content != null">or content like #{content}</if>
+
+	</select>
+
+
+
+
+
+
+
+	<select id="selectBBS" parameterType="bbsVO" resultType="bbsVO">
+		select num, title, content, owneremail, ownername, createdate, isdelete,
+		productscore, deleveryscore, reviewscore
+		from bbs
+		where isdelete = 'N'
+		and num = #{num}
+	</select>
+
+
+	<insert id="insertBBS" parameterType="bbsVO">
+		insert into bbs(title, content, owneremail, ownername, createdate,
+		productscore, deleveryscore, reviewscore, category )
+		values (#{title}, #{content}, #{owneremail}, #{ownername}, curdate(),
+		#{productscore}, #{deleveryscore}, #{reviewscore}, #{category})
+	</insert>
+
+
+	<update id="updateBBS" parameterType="bbsVO">
+		update bbs
+		<set>
+			<if test="title != null">, title = #{title}</if>
+			<if test="content != null">, content = #{content}</if>
+			<if test="productscore != null">, productscore = #{productscore}</if>
+			<if test="deleveryscore != null">, deleveryscore = #{deleveryscore}</if>
+			<if test="reviewscore != null">, reviewscore = #{reviewscore}</if>
+			<if test="createdate != null">, createdate = curdate()</if>
+			<if test="category != null">, category = #{category}</if>
+		</set>
+		where num = #{num}
+	</update>
+
+
+	<delete id="deleteBBS" parameterType="bbsVO">
+		update bbs set isdelete =
+		'Y' where num = #{num}
+	</delete>
+
+
+
+	<!-- 리뷰게시판의 별점 평균, 소숫점 1자리까지 계산 -->
+	<select id="reviewAvg" resultType="int">
+		SELECT ROUND(AVG(productscore),1) as productscore
+		FROM bbs
+
+
+	</select>
+</mapper>
+  
+  

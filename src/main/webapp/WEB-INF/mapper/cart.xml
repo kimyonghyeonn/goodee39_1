@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cart">
+	<insert id="insertCartItem" parameterType="cartVO">
+		insert into cart(cart_num, member_num, product_num, amount)
+		values(cart_num, #{member_num},#{product_num}, #{amount})
+	</insert>
+
+
+
+
+
+
+
+
+	<select id="showCartList" parameterType="cartVO"
+		resultType="cartVO">
+		select c.cart_num , p.product_name AS product_name, c.amount AS amount,
+		p.product_price AS product_price, (c.amount * p.product_price) money
+		from member m, cart c, product p
+		where m.num = c.member_num and p.product_num = c.product_num and
+		c.member_num = #{member_num}
+	</select>
+
+
+	<select id="sumCartItem" resultType="int">
+		SELECT SUM(p.product_price * amount) money
+		FROM cart c, product p
+		WHERE c.product_num = p.product_num AND c.member_num = #{member_num}
+	</select>
+
+
+	<!-- 장바구니 삭제 -->
+	<delete id="deleteCartItem">
+		delete from cart
+		where cart_num = #{cart_num}
+	</delete>
+
+
+	<!-- 장바구니 수정 -->
+<!-- 	<update id="modifyCartItem" parameterType="cartVO">
+		update cart
+		set amount = #{amount}
+		where member_num = #{member_num}
+		and product_num = #{product_num}
+		and cart_num = #{cart_num}
+	</update> -->
+	
+	<update id="modifyCartItem" parameterType="cartVO">
+		update cart
+		set amount = #{amount}
+		where  cart_num = #{cart_num}
+	</update>
+
+
+</mapper>

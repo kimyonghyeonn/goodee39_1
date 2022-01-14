@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0/EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+<!-- vo객체에 대한 변수명 넣기 -->
+<typeAliases>
+<typeAlias type="kr.co.goodee39.vo.MemberVO" alias="memberVO"/>
+<typeAlias type="kr.co.goodee39.vo.BBSVO" alias="bbsVO"/>
+<typeAlias type="kr.co.goodee39.vo.ProductVO" alias="productVO"/>
+<typeAlias type="kr.co.goodee39.vo.CartVO" alias="cartVO"/>
+<typeAlias type="kr.co.goodee39.vo.FAQVO" alias="faqVO"/>
+
+</typeAliases>
+
+</configuration>
+ 

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="product">
+	<select id="showProductItem" parameterType="productVO"
+		resultType="productVO">
+		select product_num, product_name, product_price,
+		product_desc1,
+		product_desc2
+		from product
+		where product_num =
+		#{product_num}
+
+	</select>
+
+<!-- 	<select id="showProductItemList" parameterType="productVO"
+		resultType="productVO">
+		select product_num, product_name, product_price, 
+		product_desc1,
+		product_desc2, product_thumnail
+		from product
+	</select> -->
+	
+	<select id="showProductItemList" parameterType="productVO"
+		resultType="productVO">
+		select product_num, product_name, product_price, 
+		product_desc1,
+		product_desc2, product_thumnail,
+		ROUND(AVG(productscore)) as product_avg
+ 		from product , bbs 
+ 		WHERE category = product_num
+ 		GROUP BY product_num
+	</select>
+
+
+
+
+	<delete id="deleteProductItem" parameterType="int">
+		delete
+		from product
+		where product_num = #{product_num}
+	</delete>
+
+
+	<select id="showProductAvg" parameterType="productVO"
+		resultType="int">
+		select ROUND(AVG(b.productscore)) as product_avg
+		from product p, bbs b
+		WHERE b.category = #{product_num}
+		GROUP BY p.product_num
+	</select>
+
+
+
+
+
+
+
+
+
+
+
+
+</mapper>
